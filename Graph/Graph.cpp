@@ -1,35 +1,40 @@
-#include "Graph.h"
+﻿#include "Graph.h"
 #include <iostream>
-std::vector<std::shared_ptr<CNode>> CGraph::GetNodes() const
+std::list<std::shared_ptr<CNode>> CGraph::GetNodes() const
 {
 	return m_sNodes;
 }
 
-std::vector<std::shared_ptr<CEdge>> CGraph::GetEdges() const
+std::list<std::shared_ptr<CEdge>> CGraph::GetEdges() const
 {
 	return m_sEdges;
 }
 
 
 
-void CGraph::AddNode(std::string strName)
+void CGraph::AddNode(const std::string& strName)
 {
 	if (!countainsNode(strName)) {
+
 		m_sNodes.push_back(std::make_shared<CNode>(strName));
-		std::cout << "Sommet " << strName << " cr��." << std::endl;
+		std::cout << "Sommet " << strName << " créé." << std::endl;
 	}
 	else
-		std::cerr << "ERROR : Le sommet existe d�j�!" << std::endl;
+		std::cerr << "ERREUR : Le sommet existe déjà!" << std::endl;
 }
 
 void CGraph::AddEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 {
 	if (!countainsEdge(n1, n2)) {
 		m_sEdges.push_back(std::make_shared<CEdge>(n1, n2));
-		std::cout << "Arc " << n1->GetName() << n2->GetName() << " cr��." << std::endl;
+		n1->UpDegreeSortant();
+		n2->UpDegreeEntrant();
+		std::cout << "Arc " << n1->GetName() << n2->GetName() << " créé." << std::endl;
+		std::cout << n1->GetName() << " : " << n1->GetDegreeEntrant() << " degré(s) entrant(s) et " << n1->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;
+		std::cout << n2->GetName() << " : " << n2->GetDegreeEntrant() << " degré(s) entrant(s) et " << n2->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;
 	}
 	else
-		std::cerr << "ERREUR : L'arc existe d�j�!" << std::endl;
+		std::cerr << "ERREUR : L'arc existe déjà!" << std::endl;
 
 }
 
@@ -38,20 +43,28 @@ void CGraph::AddEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 void CGraph::RemoveNode(std::shared_ptr<CNode> n)
 {
 	if (countainsNode(n->GetName())) {
-		for (auto e = m_sEdges.begin(); e != m_sEdges.end();)
+		for (std::shared_ptr<CEdge> e : GetEdges())
 		{
-			if (e->get()->GetFirstNode() == n || e->get()->GetSecNode() == n) {
-				auto tempE = e;
-				e++;
-				std::cout << "Arc " << tempE->get()->GetFirstNode()->GetName() << tempE->get()->GetSecNode()->GetName() << " removed" << std::endl;
-				m_sEdges.erase(tempE);
+			auto tempE = e;
+			if (tempE->GetFirstNode() == n) {
+				std::cout << "Arc " << tempE->GetFirstNode()->GetName() << tempE->GetSecNode()->GetName() << " removed" << std::endl;
+				tempE->GetSecNode()->DownDegreeEntrant();
+				m_sEdges.remove(tempE);
 			}
-			else
-				e++;
+			else if (tempE->GetSecNode() == n) {
+				std::cout << "Arc " << tempE->GetFirstNode()->GetName() << tempE->GetSecNode()->GetName() << " removed" << std::endl;
+				(tempE)->GetFirstNode()->DownDegreeSortant();
+				m_sEdges.remove(tempE);
+			}
+			
+/*
+			std::cout << (*e)->GetFirstNode()->GetName() << " : " << (*e)->GetFirstNode()->GetDegreeEntrant() << " degré(s) entrant(s) et " << (*e)->GetFirstNode()->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;
+			std::cout << (*e)->GetSecNode()->GetName() << " : " << (*e)->GetSecNode()->GetDegreeEntrant() << " degré(s) entrant(s) et " << (*e)->GetSecNode()->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;*/
+			
 		}
-		for (auto n1 = m_sNodes.begin(); n1 != m_sNodes.end(); n1++)
-			if (*n1 == n)
-				n1 = m_sNodes.erase(n1);
+		for (std::shared_ptr<CNode> n1 : GetNodes())
+			if (n1 == n)
+				m_sNodes.remove(n1);
 		std::cout << "Node : " << n->GetName() << " removed" << std::endl;
 	}else
 		std::cerr << "ERREUR : Le sommet n'existe pas!" << std::endl;
@@ -61,11 +74,13 @@ void CGraph::RemoveNode(std::shared_ptr<CNode> n)
 
 void CGraph::RemoveEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 {
-	for (auto e = m_sEdges.begin(); e != m_sEdges.end(); ++e)
+	for (std::shared_ptr<CEdge> e : GetEdges())
 	{
-		if (e->get()->GetFirstNode() == n1 && e->get()->GetSecNode() == n2) {
+		if (e->GetFirstNode() == n1 && e->GetSecNode() == n2) {
+			n1->DownDegreeSortant();
+			n2->DownDegreeEntrant();
 			std::cout << "Arete " << n1->GetName() << n2->GetName() << " removed" << std::endl;
-			m_sEdges.erase(e);
+			m_sEdges.remove(e);
 			return;
 		}
 	}
@@ -77,7 +92,7 @@ void CGraph::RemoveEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 std::shared_ptr<CNode> CGraph::FindNode(std::shared_ptr<CNode> n) const
 {
 	std::shared_ptr<CNode> node;
-	for (std::shared_ptr<CNode> n1 : m_sNodes)
+	for (const std::shared_ptr<CNode>& n1 : m_sNodes)
 	{
 		if (n1 == n)
 			node = n;
@@ -131,18 +146,18 @@ std::ostream & operator<<(std::ostream & os, const CGraph & graph)
 	os << "Nombre de Sommet : " << graph.GetNodes().size() << ", Nombre d'Arc : " << graph.GetEdges().size() << std::endl;
 
 	os << "Liens : " << std::endl;
-	for (std::shared_ptr<CEdge> e : graph.GetEdges()) {
+	for (const std::shared_ptr<CEdge>& e : graph.GetEdges()) {
 		os << "    " << e;
 	}
 	os << std::endl;
-	os << "Sommets : ";
-	for (std::shared_ptr<CNode> n : graph.GetNodes()) {
+	os << "Sommets :======== ";
+	for (const std::shared_ptr<CNode>& n : graph.GetNodes()) {
 		os << n << " ";
 	}
 	os << std::endl;
 
-	os << "Matrice : ";
-	for (int i = 0; i < graph.GetNodes().size()*2; ++i) {
+	os << "Matrice :         ";
+	for (size_t i = 0; i < graph.GetNodes().size()*2; ++i) {
 		if(i % 2 == 0)
 			os << "_";
 		else
@@ -151,10 +166,10 @@ std::ostream & operator<<(std::ostream & os, const CGraph & graph)
 	os << std::endl;
 
 	char bit = 0;
-	for (std::shared_ptr<CNode> n : graph.GetNodes())
+	for (const std::shared_ptr<CNode>& n : graph.GetNodes())
 	{
-		os << "        " << n->GetName() << "|";
-		for (std::shared_ptr<CNode> no : graph.GetNodes())
+		os << "                " << n->GetName() << "|";
+		for (const std::shared_ptr<CNode>& no : graph.GetNodes())
 		{
 			if (graph.countainsEdge(n, no))
 				bit = '1';
@@ -165,6 +180,27 @@ std::ostream & operator<<(std::ostream & os, const CGraph & graph)
 		}
 		os << std::endl;
 	}
+
+	os << "                  ";
+	for (size_t i = 0; i < graph.GetNodes().size() * 2; ++i) {
+		if (i % 2 == 0)
+			os << "—";
+		else
+			os << " ";
+	}
+	os << std::endl;
+	os << "Degrees sortant : ";
+
+	for (const std::shared_ptr<CNode>& n : graph.GetNodes()) {
+		os << n->GetDegreeSortant() << " ";
+	}
+	os << std::endl;
+	os << "Degrees entrant : ";
+
+	for (const std::shared_ptr<CNode>& n : graph.GetNodes()) {
+		os << n->GetDegreeEntrant() << " ";
+	}
+	os << std::endl;
 	os << "*******************************************" << std::endl;
 
 

@@ -13,3 +13,5 @@ Graph/Debug/Graph.log
 *.tlog
 *.idb
 *.pdb
+*.ipch
+*.enc
