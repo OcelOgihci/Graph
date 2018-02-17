@@ -1,0 +1,15 @@
+
+.vs/Graph/v15/.suo
+.vs/Graph/v15/Browse.VC.db
+.vs/Graph/v15/Browse.VC.opendb
+.vs/Graph/v15/ipch/AutoPCH/8cdfa4f1f8538924/GRAPH.ipch
+.vs/Graph/v15/ipch/AutoPCH/fa85c0a01315b25d/SOURCE.ipch
+Debug/Graph.exe
+Debug/Graph.ilk
+Debug/Graph.pdb
+Graph/Debug/Edge.obj
+Graph/Debug/Graph.log
+*.obj
+*.tlog
+*.idb
+*.pdb
