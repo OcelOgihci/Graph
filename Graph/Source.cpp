@@ -44,6 +44,8 @@ int main() {
 			cout << "  a - Afficher le graphe" << endl;
 			cout << "  n - Ajouter un sommet" << endl;
 			cout << "  e - Ajouter un arc" << endl;
+			cout << "  r - Supprimer un sommet" << endl;
+			cout << "  t - Supprimer un arc" << endl;
 			cout << "************************************************" << endl;
 			cin >> choice;
 			break;
@@ -56,6 +58,8 @@ int main() {
 			cout << "n - Pour ajouter un autre sommet" << endl;
 			cout << "e - Pour ajouter un arc" << endl;
 			cout << "a - Pour Afficher le graphe" << endl;
+			cout << "r - Pour Supprimer un sommet" << endl;
+			cout << "t - Pour Supprimer un arc" << endl;
 			cin >> choice;
 			break;
 		case 'e':
@@ -70,17 +74,49 @@ int main() {
 			cout << " -n : Pour ajouter un autre sommet" << endl;
 			cout << " -e : Pour ajouter un arc" << endl;
 			cout << " -a : Pour Afficher le graphe" << endl;
+			cout << "r - Pour Supprimer un sommet" << endl;
+			cout << "t - Pour Supprimer un arc" << endl;
 			cin >> choice;
 			break;
 		case 'a':
 			system("cls");
 			cout << graph;
+			cout << endl << " -m : Retourner au menu principal" << endl;
+			cout << " -n : Pour ajouter un autre sommet" << endl;
+			cout << " -e : Pour ajouter un arc" << endl;
+			cout << " -a : Pour Afficher le graphe" << endl;
+			cout << "r - Pour Supprimer un sommet" << endl;
+			cout << "t - Pour Supprimer un arc" << endl;
+			cin >> choice;
+			_getch();
+			break;
+		case 'r':
+			system("cls");
+			cout << "Entrez le nom du sommet : ";
+			cin >> sNameDep;
+			graph.RemoveNode(graph.FindNode(sNameDep));
 			cout << endl << "m - Retourner au menu principal" << endl;
 			cout << "n - Pour ajouter un autre sommet" << endl;
 			cout << "e - Pour ajouter un arc" << endl;
 			cout << "a - Pour Afficher le graphe" << endl;
+			cout << "r - Pour Supprimer un sommet" << endl;
+			cout << "t - Pour Supprimer un arc" << endl;
 			cin >> choice;
-			_getch();
+			break;
+		case 't':
+			system("cls");
+			cout << "Entrez le sommet de départ : ";
+			cin >> sNameDep;
+			cout << "Entrez le sommet d'arrivée : ";
+			cin >> sNameArr;
+			graph.RemoveEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr));
+			cout << endl << "m - Retourner au menu principal" << endl;
+			cout << "n - Pour ajouter un autre sommet" << endl;
+			cout << "e - Pour ajouter un arc" << endl;
+			cout << "a - Pour Afficher le graphe" << endl;
+			cout << "r - Pour Supprimer un sommet" << endl;
+			cout << "t - Pour Supprimer un arc" << endl;
+			cin >> choice;
 			break;
 		default:
 			break;

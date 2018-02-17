@@ -49,7 +49,7 @@ void CGraph::RemoveNode(std::shared_ptr<CNode> n)
 			else
 				e++;
 		}
-		for (auto n1 = m_sNodes.begin(); n1 != m_sNodes.end();)
+		for (auto n1 = m_sNodes.begin(); n1 != m_sNodes.end(); n1++)
 			if (*n1 == n)
 				n1 = m_sNodes.erase(n1);
 		std::cout << "Node : " << n->GetName() << " removed" << std::endl;
@@ -69,7 +69,7 @@ void CGraph::RemoveEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 			return;
 		}
 	}
-	std::cout << "L'arete n'existe pas!";
+	std::cerr << "ERREUR : L'arete n'existe pas!";
 }
 
 
