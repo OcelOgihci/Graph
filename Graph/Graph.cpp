@@ -1,13 +1,15 @@
 ﻿#include "Graph.h"
 #include <iostream>
+#include "ColorMod.h"// namespace Color
+
 std::list<std::shared_ptr<CNode>> CGraph::GetNodes() const
 {
-	return m_sNodes;
+	return m_lNodes;
 }
 
 std::list<std::shared_ptr<CEdge>> CGraph::GetEdges() const
 {
-	return m_sEdges;
+	return m_lEdges;
 }
 
 
@@ -16,23 +18,28 @@ void CGraph::AddNode(const std::string& strName)
 {
 	if (!countainsNode(strName)) {
 
-		m_sNodes.push_back(std::make_shared<CNode>(strName));
-		std::cout << "Sommet " << strName << " créé." << std::endl;
+		m_lNodes.push_back(std::make_shared<CNode>(strName));
+		std::cout << green << " Sommet " << strName << " créé." << white << std::endl;
 	}
 	else
-		std::cerr << "ERREUR : Le sommet existe déjà!" << std::endl;
+		std::cerr << red << " #ERREUR : Le sommet existe déjà!" << white << std::endl;
 }
 
-void CGraph::AddEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
+
+
+void CGraph::AddEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2, double dPoids)
 {
-	if (!countainsEdge(n1, n2)) {
-		m_sEdges.push_back(std::make_shared<CEdge>(n1, n2));
-		n1->UpDegreeSortant();
-		n2->UpDegreeEntrant();
-		std::cout << "Arc " << n1->GetName() << n2->GetName() << " créé." << std::endl;
+	if (!countainsEdge(n1, n2) ){
+		if (countainsNode(n1->GetName()) && countainsNode(n2->GetName())) {
+			m_lEdges.push_back(std::make_shared<CEdge>(n1, n2, dPoids));
+			n1->UpDegreeSortant();
+			n2->UpDegreeEntrant();
+			std::cout << green << " Arc " << n1->GetName() << n2->GetName() << " ("<< dPoids << ")" << " créé." << white << std::endl;
+		}else
+			std::cerr << red << " #ERREUR : Un des points n'existe pas!" << white << std::endl;
 	}
 	else
-		std::cerr << "ERREUR : L'arc existe déjà!" << std::endl;
+		std::cerr << red << " #ERREUR : L'arc existe déjà!" << white << std::endl;
 
 }
 
@@ -45,22 +52,22 @@ void CGraph::RemoveNode(std::shared_ptr<CNode> n)
 		{
 			auto tempE = e;
 			if (tempE->GetFirstNode() == n) {
-				std::cout << "Arc " << tempE->GetFirstNode()->GetName() << tempE->GetSecNode()->GetName() << " removed" << std::endl;
+				std::cout << green << " Arc " << tempE->GetFirstNode()->GetName() << tempE->GetSecNode()->GetName() << " removed" << white << std::endl;
 				tempE->GetSecNode()->DownDegreeEntrant();
-				m_sEdges.remove(tempE);
+				m_lEdges.remove(tempE);
 			}
 			else if (tempE->GetSecNode() == n) {
-				std::cout << "Arc " << tempE->GetFirstNode()->GetName() << tempE->GetSecNode()->GetName() << " removed" << std::endl;
+				std::cout << green << " Arc " << tempE->GetFirstNode()->GetName() << tempE->GetSecNode()->GetName() << " removed" << white << std::endl;
 				(tempE)->GetFirstNode()->DownDegreeSortant();
-				m_sEdges.remove(tempE);
+				m_lEdges.remove(tempE);
 			}
 		}
 		for (std::shared_ptr<CNode> n1 : GetNodes())
 			if (n1 == n)
-				m_sNodes.remove(n1);
-		std::cout << "Node : " << n->GetName() << " removed" << std::endl;
+				m_lNodes.remove(n1);
+		std::cout << green << " Node : " << n->GetName() << " removed" << white << std::endl;
 	}else
-		std::cerr << "ERREUR : Le sommet n'existe pas!" << std::endl;
+		std::cerr << red << " #ERREUR : Le sommet n'existe pas!" << white << std::endl;
 
 }
 
@@ -72,27 +79,65 @@ void CGraph::RemoveEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 		if (e->GetFirstNode() == n1 && e->GetSecNode() == n2) {
 			n1->DownDegreeSortant();
 			n2->DownDegreeEntrant();
-			std::cout << "Arete " << n1->GetName() << n2->GetName() << " removed" << std::endl;
-			m_sEdges.remove(e);
+			std::cout << green << " Arc " << n1->GetName() << n2->GetName() << " removed" << white << std::endl;
+			m_lEdges.remove(e);
 			return;
 		}
 	}
-	std::cerr << "ERREUR : L'arete n'existe pas!";
+	std::cerr << red << " #ERREUR : Cet arc n'existe pas!" << white << std::endl;
 }
 
-void CGraph::AddPoids(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2, double d) {
+void CGraph::AddPoids(std::string s1, std::string s2, double d) {
+	std::shared_ptr<CNode> n1 = FindNode(s1);
+	std::shared_ptr<CNode> n2 = FindNode(s2);
+
 	for (std::shared_ptr<CEdge> e : GetEdges())
 	{
-		if (e->GetFirstNode() == n1 && e->GetSecNode() == n2) {
+		if (e->GetFirstNode() == n1 && e->GetSecNode() == n2) 
 			e->SetPoids(d);
-		}
 	}
+		
+	std::cerr << red << " #ERREUR : Cet arc n'existe pas!" << white << std::endl;
+	std::cerr << blue << " Voulez vous le créer? [y/n]" << white << std::endl;
+	char choice;
+	std::cin >> choice;
+	if (choice == 'y') {
+		if (n1) 
+			std::cout << green << " " << n1->GetName() << " : OK" << white << std::endl;
+		else {
+			std::cerr << red << " #ERREUR : Le sommet " << s1 << " n'existe pas!" << white << std::endl;
+			std::cerr << blue << " Voulez vous le créer? [y/n]" << white << std::endl;
+			std::cin >> choice;
+			if (choice == 'y') {
+				AddNode(s1);
+				n1 = FindNode(s1);
+			}
+			else
+				return;
+		}
+		if (n2) 
+			std::cout << green << " " << n2->GetName() << " : OK" << white << std::endl;
+		else {
+			std::cerr << red << " #ERREUR : Le sommet " << s2 << " n'existe pas!" << white << std::endl;
+			std::cerr << blue << " Voulez vous le créer? [y/n]" << white << std::endl;
+
+			std::cin >> choice;
+			if (choice == 'y') {
+				AddNode(s2);
+				n2 = FindNode(s2);
+			}
+			else
+				return;
+		}
+		AddEdge(n1, n2, d);
+	}
+			
 }
 
 std::shared_ptr<CNode> CGraph::FindNode(std::shared_ptr<CNode> n) const
 {
 	std::shared_ptr<CNode> node;
-	for (const std::shared_ptr<CNode>& n1 : m_sNodes)
+	for (const std::shared_ptr<CNode>& n1 : m_lNodes)
 	{
 		if (n1 == n)
 			node = n;
@@ -105,7 +150,7 @@ std::shared_ptr<CNode> CGraph::FindNode(std::string strName) const
 {
 
 	std::shared_ptr<CNode> node;
-	for(std::shared_ptr<CNode> n : m_sNodes)
+	for(std::shared_ptr<CNode> n : m_lNodes)
 	{
 		if (n->GetName() == strName)
 			node = n;
@@ -116,7 +161,7 @@ std::shared_ptr<CNode> CGraph::FindNode(std::string strName) const
 
 bool CGraph::countainsEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2) const
 {
-	for (std::shared_ptr<CEdge> e1 : m_sEdges)
+	for (std::shared_ptr<CEdge> e1 : m_lEdges)
 	{
 		
 		if (e1->GetFirstNode() == n1 && e1->GetSecNode() == n2)
@@ -128,10 +173,9 @@ bool CGraph::countainsEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 
 bool CGraph::countainsNode(std::string strName) const
 {
-	for (std::shared_ptr<CNode> n1 : m_sNodes)
+	for (std::shared_ptr<CNode> n : m_lNodes)
 	{
-
-		if (n1->GetName() == strName)
+		if (n->GetName() == strName)
 			return true;
 	}
 
@@ -189,13 +233,13 @@ std::ostream & operator<<(std::ostream & os, const CGraph & graph)
 			os << " ";
 	}
 	os << std::endl;
-	os << "Degrees sortant : ";
+	os << "Degres sortant :  ";
 
 	for (const std::shared_ptr<CNode>& n : graph.GetNodes()) {
 		os << n->GetDegreeSortant() << " ";
 	}
 	os << std::endl;
-	os << "Degrees entrant : ";
+	os << "Degres entrant :  ";
 
 	for (const std::shared_ptr<CNode>& n : graph.GetNodes()) {
 		os << n->GetDegreeEntrant() << " ";

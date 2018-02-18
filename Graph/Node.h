@@ -12,10 +12,10 @@ private:
 public:
 	CNode(std::string strName = "") : m_strName(strName), m_nDegreeEntrant(0), m_nDegreeSortant(0) {}
 
-	std::string GetName() const;
+	std::string GetName() const { return m_strName; }
 
-	int GetDegreeEntrant() const;
-	int GetDegreeSortant() const;
+	int GetDegreeEntrant() const { return m_nDegreeEntrant; }
+	int GetDegreeSortant() const { return m_nDegreeSortant; }
 
 	void UpDegreeEntrant();
 	void DownDegreeSortant();
