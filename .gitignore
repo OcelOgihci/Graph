@@ -15,3 +15,9 @@ Graph/Debug/Graph.log
 *.pdb
 *.ipch
 *.enc
+.cproject
+.project
+*.filters
+Graph/Graph.vcxproj
+Graph/Graph.vcxproj
+Graph/Graph.vcxproj.filters
