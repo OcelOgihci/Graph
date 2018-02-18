@@ -17,6 +17,16 @@ std::shared_ptr<CNode> CEdge::GetSecNode() const
 	return m_pSecNode;
 }
 
+double CEdge::GetPoids() const
+{
+	return m_dPoids;
+}
+
+void CEdge::SetPoids(double d)
+{
+	m_dPoids = d;
+}
+
 bool CEdge::operator==(const CEdge & e)
 {
 	if (this->m_dPoids == e.m_dPoids && this->m_pFirstNode == e.GetFirstNode() && this->m_pSecNode == e.m_pSecNode)
@@ -27,6 +37,6 @@ bool CEdge::operator==(const CEdge & e)
 
 std::ostream & operator<<(std::ostream & os, std::shared_ptr<CEdge> edge)
 {
-	os << "Un arc joint les sommets : " + edge->GetFirstNode()->GetName() + " et " + edge->GetSecNode()->GetName() << std::endl;
+	os << "Un arc joint les sommets : " << edge->GetFirstNode()->GetName() << " et " << edge->GetSecNode()->GetName() << "(" << edge->GetPoids() << ")" << std::endl;
 	return os;
 }

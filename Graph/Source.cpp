@@ -6,6 +6,16 @@
 #include <conio.h>
 using namespace std;
 
+#define menu() 	cout << endl << " -m : Retourner au menu principal" << endl; \
+				cout << " -n : Pour Ajouter un sommet" << endl; \
+				cout << " -e : Pour Ajouter un arc" << endl; \
+				cout << " -p : Pour Ajouter un poids à un arc" << endl; \
+				cout << " -a : Pour Afficher le graphe" << endl; \
+				cout << " -r : Pour Supprimer un sommet" << endl; \
+				cout << " -t : Pour Supprimer un arc" << endl;\
+				cout << "************************************************" << endl; \
+				cin >> choice; 
+
 int main() {
 	system("chcp 1252>NUL");
 	char choice = 'm';
@@ -23,6 +33,10 @@ int main() {
 	graph.AddEdge(graph.FindNode("A"), graph.FindNode("A"));
 	graph.AddEdge(graph.FindNode("B"), graph.FindNode("C"));
 	graph.AddEdge(graph.FindNode("C"), graph.FindNode("A"));
+	graph.AddPoids(graph.FindNode("A"), graph.FindNode("B"), 10);
+	graph.AddPoids(graph.FindNode("A"), graph.FindNode("A"), 2);
+	graph.AddPoids(graph.FindNode("B"), graph.FindNode("C"), 12);
+	graph.AddPoids(graph.FindNode("C"), graph.FindNode("A"), 2.5);
 	//graph.AddEdge(graph.FindNode("E"), graph.FindNode("F"));
 	//graph.AddEdge(graph.FindNode("F"), graph.FindNode("A"));
 	//graph.AddEdge(graph.FindNode("C"), graph.FindNode("D"));
@@ -42,12 +56,7 @@ int main() {
 			system("cls");
 			cout << "*********** [Modélisateur de Graphe]*************" << endl;
 			cout << "************************************************" << endl;
-			cout << "  a - Afficher le graphe" << endl;
-			cout << "  n - Ajouter un sommet" << endl;
-			cout << "  e - Ajouter un arc" << endl;
-			cout << "  r - Supprimer un sommet" << endl;
-			cout << "  t - Supprimer un arc" << endl;
-			cout << "************************************************" << endl;
+			menu();
 			cin >> choice;
 			break;
 		case 'n':
@@ -56,12 +65,7 @@ int main() {
 			cin >> sNameDep;
 			graph.AddNode(sNameDep);
 			cout << endl << " -m : Retourner au menu principal" << endl;
-			cout << " -n : Pour ajouter un autre sommet" << endl;
-			cout << " -e : Pour ajouter un arc" << endl;
-			cout << " -a : Pour Afficher le graphe" << endl;
-			cout << " -r : Pour Supprimer un sommet" << endl;
-			cout << " -t : Pour Supprimer un arc" << endl;
-			cin >> choice;
+			menu();
 			break;
 		case 'e':
 			system("cls");
@@ -71,24 +75,12 @@ int main() {
 			cin >> sNameArr;
 			graph.AddEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr));
 
-			cout << endl << " -m : Retourner au menu principal" << endl;
-			cout << " -n : Pour ajouter un autre sommet" << endl;
-			cout << " -e : Pour ajouter un arc" << endl;
-			cout << " -a : Pour Afficher le graphe" << endl;
-			cout << " -r : Pour Supprimer un sommet" << endl;
-			cout << " -t : Pour Supprimer un arc" << endl;
-			cin >> choice;
+			menu();
 			break;
 		case 'a':
 			system("cls");
 			cout << graph;
-			cout << endl << " -m : Retourner au menu principal" << endl;
-			cout << " -n : Pour ajouter un autre sommet" << endl;
-			cout << " -e : Pour ajouter un arc" << endl;
-			cout << " -a : Pour Afficher le graphe" << endl;
-			cout << " -r : Pour Supprimer un sommet" << endl;
-			cout << " -t : Pour Supprimer un arc" << endl;
-			cin >> choice;
+			menu();
 			_getch();
 			break;
 		case 'r':
@@ -96,13 +88,7 @@ int main() {
 			cout << "Entrez le nom du sommet : ";
 			cin >> sNameDep;
 			graph.RemoveNode(graph.FindNode(sNameDep));
-			cout << endl << " -m : Retourner au menu principal" << endl;
-			cout << " -n : Pour ajouter un autre sommet" << endl;
-			cout << " -e : Pour ajouter un arc" << endl;
-			cout << " -a : Pour Afficher le graphe" << endl;
-			cout << " -r : Pour Supprimer un sommet" << endl;
-			cout << " -t : Pour Supprimer un arc" << endl;
-			cin >> choice;
+			menu();
 			break;
 		case 't':
 			system("cls");
@@ -111,13 +97,19 @@ int main() {
 			cout << "Entrez le sommet d'arrivée : ";
 			cin >> sNameArr;
 			graph.RemoveEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr));
-			cout << endl << " -m : Retourner au menu principal" << endl;
-			cout << " -n : Pour ajouter un autre sommet" << endl;
-			cout << " -e : Pour ajouter un arc" << endl;
-			cout << " -a : Pour Afficher le graphe" << endl;
-			cout << " -r : Pour Supprimer un sommet" << endl;
-			cout << " -t : Pour Supprimer un arc" << endl;
-			cin >> choice;
+			menu();
+			break;
+		case 'p':
+			int nPoids;
+			system("cls");
+			cout << "Entrez le sommet de départ : ";
+			cin >> sNameDep;
+			cout << "Entrez le sommet d'arrivée : ";
+			cin >> sNameArr;
+			cout << "Entrez le poids : ";
+			cin >> nPoids;
+			graph.AddPoids(graph.FindNode(sNameDep), graph.FindNode(sNameArr), nPoids);
+			menu();
 			break;
 		default:
 			break;

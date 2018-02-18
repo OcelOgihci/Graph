@@ -30,8 +30,6 @@ void CGraph::AddEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 		n1->UpDegreeSortant();
 		n2->UpDegreeEntrant();
 		std::cout << "Arc " << n1->GetName() << n2->GetName() << " créé." << std::endl;
-		std::cout << n1->GetName() << " : " << n1->GetDegreeEntrant() << " degré(s) entrant(s) et " << n1->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;
-		std::cout << n2->GetName() << " : " << n2->GetDegreeEntrant() << " degré(s) entrant(s) et " << n2->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;
 	}
 	else
 		std::cerr << "ERREUR : L'arc existe déjà!" << std::endl;
@@ -56,11 +54,6 @@ void CGraph::RemoveNode(std::shared_ptr<CNode> n)
 				(tempE)->GetFirstNode()->DownDegreeSortant();
 				m_sEdges.remove(tempE);
 			}
-			
-/*
-			std::cout << (*e)->GetFirstNode()->GetName() << " : " << (*e)->GetFirstNode()->GetDegreeEntrant() << " degré(s) entrant(s) et " << (*e)->GetFirstNode()->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;
-			std::cout << (*e)->GetSecNode()->GetName() << " : " << (*e)->GetSecNode()->GetDegreeEntrant() << " degré(s) entrant(s) et " << (*e)->GetSecNode()->GetDegreeSortant() << " degré(s) sortant(s)." << std::endl;*/
-			
 		}
 		for (std::shared_ptr<CNode> n1 : GetNodes())
 			if (n1 == n)
@@ -87,7 +80,14 @@ void CGraph::RemoveEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2)
 	std::cerr << "ERREUR : L'arete n'existe pas!";
 }
 
-
+void CGraph::AddPoids(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2, double d) {
+	for (std::shared_ptr<CEdge> e : GetEdges())
+	{
+		if (e->GetFirstNode() == n1 && e->GetSecNode() == n2) {
+			e->SetPoids(d);
+		}
+	}
+}
 
 std::shared_ptr<CNode> CGraph::FindNode(std::shared_ptr<CNode> n) const
 {

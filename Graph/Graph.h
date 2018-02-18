@@ -21,6 +21,8 @@ public:
 	void RemoveNode(std::shared_ptr<CNode> n);
 	void RemoveEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2);
 
+	void AddPoids(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2, double d);
+
 	std::shared_ptr<CNode> FindNode(std::shared_ptr<CNode> n) const;
 	std::shared_ptr<CNode> FindNode(std::string strName) const;
 
