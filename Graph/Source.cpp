@@ -6,19 +6,20 @@
 #include <conio.h>
 using namespace std;
 
-#define menu() 	cout << endl << " -m : Retourner au menu principal" << endl; \
-				cout << " -n : Pour Ajouter un sommet" << endl; \
-				cout << " -e : Pour Ajouter un arc" << endl; \
-				cout << " -p : Pour Ajouter un poids à un arc" << endl; \
-				cout << " -a : Pour Afficher le graphe" << endl; \
-				cout << " -r : Pour Supprimer un sommet" << endl; \
-				cout << " -t : Pour Supprimer un arc" << endl;\
+#define menu() 	cout << endl << "************************************************" << endl; \
+				cout << " -1 : Retourner au menu principal" << endl; \
+				cout << " -2 : Pour Ajouter un sommet" << endl; \
+				cout << " -3 : Pour Ajouter un arc" << endl; \
+				cout << " -4 : Pour Ajouter un poids à un arc" << endl; \
+				cout << " -5 : Pour Afficher le graphe" << endl; \
+				cout << " -6 : Pour Supprimer un sommet" << endl; \
+				cout << " -7 : Pour Supprimer un arc" << endl;\
 				cout << "************************************************" << endl; \
 				cin >> choice; 
 
 int main() {
 	system("chcp 1252>NUL");
-	char choice = 'm';
+	unsigned int choice = 1;
 	CGraph graph;
 	graph.AddNode("A");
 	graph.AddNode("B");
@@ -52,22 +53,19 @@ int main() {
 
 		switch (choice)
 		{
-		case 'm':
+		case 1:
 			system("cls");
 			cout << "*********** [Modélisateur de Graphe]*************" << endl;
-			cout << "************************************************" << endl;
 			menu();
-			cin >> choice;
 			break;
-		case 'n':
+		case 2:
 			system("cls");
 			cout << "Entrez le nom du sommet : ";
 			cin >> sNameDep;
 			graph.AddNode(sNameDep);
-			cout << endl << " -m : Retourner au menu principal" << endl;
 			menu();
 			break;
-		case 'e':
+		case 3:
 			system("cls");
 			cout << "Entrez le sommet de départ : ";
 			cin >> sNameDep;
@@ -77,20 +75,19 @@ int main() {
 
 			menu();
 			break;
-		case 'a':
+		case 4:
 			system("cls");
 			cout << graph;
 			menu();
-			_getch();
 			break;
-		case 'r':
+		case 5:
 			system("cls");
 			cout << "Entrez le nom du sommet : ";
 			cin >> sNameDep;
 			graph.RemoveNode(graph.FindNode(sNameDep));
 			menu();
 			break;
-		case 't':
+		case 6:
 			system("cls");
 			cout << "Entrez le sommet de départ : ";
 			cin >> sNameDep;
@@ -99,7 +96,7 @@ int main() {
 			graph.RemoveEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr));
 			menu();
 			break;
-		case 'p':
+		case 7:
 			int nPoids;
 			system("cls");
 			cout << "Entrez le sommet de départ : ";
