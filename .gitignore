@@ -21,3 +21,10 @@ Graph/Debug/Graph.log
 Graph/Graph.vcxproj
 Graph/Graph.vcxproj
 Graph/Graph.vcxproj.filters
+*.vcxproj
+*.filters
+*.vcxproj
+*.db-wal
+*.db-shm
+*.db
+*.sqlite

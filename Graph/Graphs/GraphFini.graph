@@ -1,0 +1,8 @@
+Sommets:
+A B C F D H G R Y E T 
+Arcs:
+F G 2
+T R 4
+A B 2
+A C 3
+D C 2

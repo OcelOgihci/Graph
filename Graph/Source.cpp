@@ -1,51 +1,49 @@
 #include "Edge.h"
 #include "Graph.h"
 #include "Node.h"
-#include "Tree.h"
 #include <iostream>
+#include <conio.h>
 #include "ColorMod.h"// namespace Color
+#include <experimental/filesystem> // C++-standard header file name  
+#include <filesystem> // Microsoft-specific implementation header file name  
+using namespace std::experimental::filesystem::v1;
 
-#define menu() 	std::cout << std::endl << "************************************************" <<	std::endl; \
+
+#define MENU 	std::cout << std::endl << yellow << "************************************************" << white <<	std::endl; \
 				std::cout << " -1 : Retourner au menu principal" <<							std::endl; \
-				std::cout << " -2 : Pour Ajouter un sommet" <<								std::endl; \
-				std::cout << " -3 : Pour Ajouter un arc" <<									std::endl; \
-				std::cout << " -4 : Pour Ajouter un poids à un arc" <<						std::endl; \
-				std::cout << " -5 : Pour Afficher le graphe" <<								std::endl; \
-				std::cout << " -6 : Pour Supprimer un sommet" <<							std::endl; \
-				std::cout << " -7 : Pour Supprimer un arc" <<								std::endl; \
-				std::cout << " -9 : Pour quitter" <<										std::endl; \
-				std::cout << "************************************************" <<			std::endl; \
+				std::cout << " -2 : Ajouter un sommet" <<								std::endl; \
+				std::cout << " -3 : Ajouter un arc" <<									std::endl; \
+				std::cout << " -4 : Ajouter un poids à un arc" <<						std::endl; \
+				std::cout << " -5 : Afficher le graphe" <<								std::endl; \
+				std::cout << " -6 : Supprimer un sommet" <<							std::endl; \
+				std::cout << " -7 : Supprimer un arc" <<								std::endl; \
+				std::cout << " -s : Sauvegarder le graphe" <<							std::endl; \
+				std::cout << " -l : Charger un graphe" <<								std::endl; \
+				std::cout << " -9 : Quitter" <<										std::endl; \
+				std::cout << yellow << "************************************************" << white <<	std::endl; \
 				std::cin >> choice; 
+
+#define GRAPH_LIST 	std::cout << "|Liste des différents graphs existants: " << std::endl;		\
+					for (auto & p : directory_iterator("Graphs/"))							\
+					std::cout << blue << "-" << p.path().filename() << std::endl;
+
+#define ASK_FOR_EDGE 			std::cout << "|Entrez le sommet de départ : ";		  \
+								std::cin >> sNameDep;								  \
+								std::cout << "|Entrez le sommet d'arrivée : ";		  \
+								std::cin >> sNameArr;								  \
+								std::cout << "|Entrez le poids : ";					  \
+								std::cin >> dPoids;
 
 int main() {
 	system("chcp 1252>NUL");
 	char choice = '1';
 	CGraph graph;
-	graph.AddNode("A");
-	graph.AddNode("B");
-	graph.AddNode("C");
-	//graph.AddNode("D");
-	//graph.AddNode("E");
-	//graph.AddNode("F");
-	//graph.AddNode("G");
-	//graph.AddNode("H");
-	//graph.AddNode("I");
-	graph.AddEdge(graph.FindNode("A"), graph.FindNode("B"), 10);
-	graph.AddEdge(graph.FindNode("A"), graph.FindNode("A"), 2);
-	graph.AddEdge(graph.FindNode("B"), graph.FindNode("C"), 12);
-	graph.AddEdge(graph.FindNode("C"), graph.FindNode("A"), 2.5);
-	//graph.AddEdge(graph.FindNode("E"), graph.FindNode("F"));
-	//graph.AddEdge(graph.FindNode("F"), graph.FindNode("A"));
-	//graph.AddEdge(graph.FindNode("C"), graph.FindNode("D"));
-	//graph.AddEdge(graph.FindNode("A"), graph.FindNode("E"));
-	//graph.AddEdge(graph.FindNode("B"), graph.FindNode("E"));
-	//graph.AddEdge(graph.FindNode("A"), graph.FindNode("D"));
-
-	//graph.RemoveNode(graph.FindNode("B"));
-	//graph.RemoveEdge(graph.FindNode("C"), graph.FindNode("A"));
-	
 	std::string sNameDep, sNameArr;
 	double dPoids;
+	std::string strName;
+
+	graph.loadGraph("GraphFini");
+
 	do {
 
 		switch (choice)
@@ -53,14 +51,14 @@ int main() {
 		case '1':
 			system("cls");
 			std::cout << yellow << "*********** [Modélisateur de Graphe]*************" << white << std::endl;
-			menu();
+			MENU;
 			break;
 		case '2':
 			system("cls");
 			std::cout << " Entrez le nom du sommet : ";
 			std::cin >> sNameDep;
 			graph.AddNode(sNameDep);
-			menu();
+			MENU;
 			break;
 		case '3':
 			system("cls");
@@ -70,42 +68,60 @@ int main() {
 			std::cin >> sNameArr;
 			std::cout << "|Entrez le poids de l'arc : ";
 			std::cin >> dPoids;
-			graph.AddEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr), dPoids);
+			graph.AddEdge(sNameDep,sNameArr, dPoids);
 
-			menu();
+			MENU;
 			break;
 		case '5':
 			system("cls");
 			std::cout << graph;
-			menu();
+			MENU;
 			break;
 		case '6':
 			system(" cls");
 			std::cout << "|Entrez le nom du sommet : ";
 			std::cin >> sNameDep;
 			graph.RemoveNode(graph.FindNode(sNameDep));
-			menu();
+			MENU;
 			break;
 		case '7':
 			system("cls");
-			std::cout << "|Entrez le sommet de départ : ";
-			std::cin >> sNameDep;
-			std::cout << "|Entrez le sommet d'arrivée : ";
-			std::cin >> sNameArr;
-			graph.RemoveEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr));
-			menu();
+			ASK_FOR_EDGE;
+			graph.RemoveEdge(graph.FindNode(sNameDep), graph.FindNode(sNameArr), dPoids);
+			MENU;
 			break;
 		case '4':
 			int nPoids;
 			system("cls");
-			std::cout << "|Entrez le sommet de départ : ";
-			std::cin >> sNameDep;
-			std::cout << "|Entrez le sommet d'arrivée : ";
-			std::cin >> sNameArr;
-			std::cout << "|Entrez le poids : ";
-			std::cin >> nPoids;
-			graph.AddPoids(sNameDep, sNameArr, nPoids);
-			menu();
+
+			ASK_FOR_EDGE;
+			graph.AddPoids(sNameDep, sNameArr, dPoids);
+			MENU;
+			break;
+		case 's':
+			system("cls"); 
+			GRAPH_LIST;
+			std::cout << white << "|Entrez le nom du fichier (sans extension!) :" << std::endl;
+
+			std::cout << "|'q' pour annuler et revenir au menu principal" << std::endl;
+			std::cin >> strName;
+			if (strName == "q") { choice = 1; break; }
+			
+			graph.saveGraph(strName);
+			MENU;
+			break;
+		case 'l':
+			system("cls");
+
+			GRAPH_LIST;
+			std::cout << white << std::endl << "|Entrez le nom du fichier (sans extension!) :" << std::endl;
+
+			std::cout << "|'q' pour annuler et revenir au menu principal" << std::endl;
+			std::cout << red << "[/!\ TOUT GRAPHE NON SAUVEGARDÉ SERA PERDU /!\]" << white << std::endl;
+			std::cin >> strName;
+			if (strName == "q") { choice = 1; break; }
+			graph.loadGraph(strName);
+			MENU;
 			break;
 		default:
 			choice = '1';
@@ -115,3 +131,5 @@ int main() {
 
 	return 0;
 }
+
+
