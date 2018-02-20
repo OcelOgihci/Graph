@@ -223,13 +223,23 @@ bool CGraph::countainsNode(std::string strName) const
 }
 
 
-void CGraph::saveGraph(const std::string& strName) {
+void CGraph::saveGraph(std::string strName) {
 	std::ofstream file;
 
 	if (fileExist("Graphs/" + strName + ".graph")) {
 		char choice;
-		std::cerr << red << "|#ERREUR : Le fichier existe déjà!" << white << std::endl;
-		return;
+		std::cerr << red << "|#Le fichier existe déjà!" << white << std::endl;
+		do {
+			std::cout << yellow << "|Voulez-vous écraser le fichier? [y/n]" << std::endl;
+
+			std::cin >> choice;
+
+			if (choice == 'y' || choice == 'Y') {
+				break;
+			}
+			else if (choice == 'n' || choice == 'N')
+				return;
+		} while (choice != 'y' || choice != 'Y' || choice != 'n' || choice != 'N');
 	}
 		
 		file.open("Graphs/" + strName + ".graph");

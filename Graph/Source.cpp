@@ -27,11 +27,11 @@ using namespace std::experimental::filesystem::v1;
 					for (auto & p : directory_iterator("Graphs/"))							\
 					std::cout << blue << "-" << p.path().filename() << std::endl;
 
-#define ASK_FOR_EDGE 			std::cout << "|Entrez le sommet de départ : ";		  \
+#define ASK_FOR_EDGE 			std::cout << yellow << "|Entrez le sommet de départ : ";		  \
 								std::cin >> sNameDep;								  \
-								std::cout << "|Entrez le sommet d'arrivée : ";		  \
+								std::cout << yellow << "|Entrez le sommet d'arrivée : ";		  \
 								std::cin >> sNameArr;								  \
-								std::cout << "|Entrez le poids : ";					  \
+								std::cout << yellow << "|Entrez le poids : ";					  \
 								std::cin >> dPoids;
 
 int main() {
@@ -62,12 +62,7 @@ int main() {
 			break;
 		case '3':
 			system("cls");
-			std::cout << "|Entrez le sommet de départ : ";
-			std::cin >> sNameDep;
-			std::cout << "|Entrez le sommet d'arrivée : ";
-			std::cin >> sNameArr;
-			std::cout << "|Entrez le poids de l'arc : ";
-			std::cin >> dPoids;
+			ASK_FOR_EDGE;
 			graph.AddEdge(sNameDep,sNameArr, dPoids);
 
 			MENU;
@@ -79,7 +74,7 @@ int main() {
 			break;
 		case '6':
 			system(" cls");
-			std::cout << "|Entrez le nom du sommet : ";
+			std::cout << yellow << "|Entrez le nom du sommet : ";
 			std::cin >> sNameDep;
 			graph.RemoveNode(graph.FindNode(sNameDep));
 			MENU;
@@ -101,9 +96,9 @@ int main() {
 		case 's':
 			system("cls"); 
 			GRAPH_LIST;
-			std::cout << white << "|Entrez le nom du fichier (sans extension!) :" << std::endl;
 
-			std::cout << "|'q' pour annuler et revenir au menu principal" << std::endl;
+			std::cout << std::endl << yellow << "|Entrez le nom du fichier (sans extension!) :" << std::endl;
+			std::cout << "|'q' pour annuler et revenir au menu principal." << std::endl;
 			std::cin >> strName;
 			if (strName == "q") { choice = 1; break; }
 			
@@ -114,9 +109,9 @@ int main() {
 			system("cls");
 
 			GRAPH_LIST;
-			std::cout << white << std::endl << "|Entrez le nom du fichier (sans extension!) :" << std::endl;
+			std::cout << yellow << std::endl << "|Entrez le nom du fichier (sans extension!) :" << std::endl;
 
-			std::cout << "|'q' pour annuler et revenir au menu principal" << std::endl;
+			std::cout << "|'q' pour annuler et revenir au menu principal." << std::endl;
 			std::cout << red << "[/!\ TOUT GRAPHE NON SAUVEGARDÉ SERA PERDU /!\]" << white << std::endl;
 			std::cin >> strName;
 			if (strName == "q") { choice = 1; break; }

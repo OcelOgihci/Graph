@@ -29,8 +29,10 @@ public:
 
 	bool countainsEdge(std::shared_ptr<CNode> n1, std::shared_ptr<CNode> n2) const;
 	bool countainsNode(std::string strName) const;
-	void saveGraph(const std::string& strName);
+
+	void saveGraph(std::string strName);
 	void loadGraph(const std::string& strName);
+
 	void clear();
 };		 
 
